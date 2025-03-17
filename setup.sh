@@ -72,6 +72,8 @@ On_IPurple='\033[0;105m'  # Purple
 On_ICyan='\033[0;106m'    # Cyan
 On_IWhite='\033[0;107m'   # White
 
+# Universal vars
+success=false
 
 # Vesktop setup
 vesktop_theme_dir=~/.config/vesktop/themes/
@@ -84,7 +86,8 @@ if [ -d "$vesktop_theme_dir" ]; then
                     echo -e "Removing old '"$BICyan""$vesktop_theme_name""$Color_Off"' file..."
                     echo -e "Copying '"$BICyan""$vesktop_theme_name""$Color_Off"' to '"$BICyan""$vesktop_theme_dir""$Color_Off"'"
                     cp ./themes/"$vesktop_theme_name" "$vesktop_theme_dir";
-                    echo -e ""$BIPurple"Vesktop"$Color_Off" Theme was successfully installed. :3"$Color_Off""
+                    echo -e ""$BIPurple"Vesktop Theme"$Color_Off" "$BIGreen"was successfully installed :3"$Color_Off""
+                    success=true
                     break;;
             No )  break;;
         esac
@@ -105,7 +108,8 @@ if [ -d "$neofetch_dir" ]; then
                     echo -e "Removing old '"$BICyan""$neofetch_config_name""$Color_Off"' file..."
                     echo -e "Copying '"$BICyan""$neofetch_config_name""$Color_Off"' to '"$BICyan""$neofetch_dir""$Color_Off"'"
                     cp ./bashrc/"$neofetch_config_name" "$neofetch_dir";
-                    echo -e ""$BIPurple"Terminal"$Color_Off" was successfully bocchified. >\\\<"$Color_Off""
+                    echo -e ""$BIPurple"Terminal"$Color_Off" "$BIGreen"was successfully bocchified >\\\\\\<"$Color_Off""
+                    success=true
                     break;;
             No )  break;;
         esac
@@ -115,4 +119,8 @@ else
     echo -e ""$Red"Install it with 'yay -S neofetch'"$Color_Off""
 fi
 
-echo -e ""$BIGreen"Setup succesfully completed!"$Color_Off""
+if [ "$success" = true ] ; then
+    echo -e ""$BIGreen"Setup succesfully completed!"$Color_Off""
+else
+    echo -e ""$BIRed"Setup was cancelled."$Color_Off""
+fi
