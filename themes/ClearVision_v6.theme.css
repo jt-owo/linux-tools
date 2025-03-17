@@ -43,7 +43,7 @@
   /* APP BACKGROUND */
   --background-shading: 100%; /* app background shading (0 for complete smoothness) [default: 100%] */
   --background-overlay: rgba(0, 0, 0, 0.6); /* app background overlay color/gradient [default: rgba(0, 0, 0, 0.6)] */
-  --background-image: url(https://i.imgur.com/AAREMqU.jpeg); /* app background image (link must be HTTPS) [default: url(https://clearvision.github.io/images/sapphire.jpg)]*/
+  --background-image: url(https://github.com/jt-owo/linux-tools/blob/main/images/vesktop_bg.jpg?raw=true); /* app background image (link must be HTTPS) [default: url(https://clearvision.github.io/images/sapphire.jpg)]*/
   --background-position: center; /* app background position [default: center] */
   --background-size: cover; /* app background size [default: cover] */
   --background-repeat: no-repeat; /* app background repeat [default: no-repeat] */
@@ -59,7 +59,7 @@
   /* HOME BUTTON ICON */
   --home-icon: url(https://raw.githubusercontent.com/gist/Arexz/dd325452a4cd45ba2c183987232571b7/raw/4bc67f144aa9c7d653a99bf8fa6f6c8bf4ae8111/furry_discord.svg); /* home button icon (link must be HTTPS) [default: url(https://clearvision.github.io/icons/discord.svg)]*/
   --home-position: center; /* home button icon position [default: center] */
-  --home-size: 40px; /* home button icon size [default: 40px] */
+  --home-size: 35px; /* home button icon size [default: 40px] */
 
   /* CHANNEL TEXT COLORS */
   --channel-color: rgba(255, 255, 255, 0.3); /* channel text color [default: rgba(255, 255, 255, 0.3)] */
