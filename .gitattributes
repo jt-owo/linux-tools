@@ -1,0 +1,14 @@
+*       text    eol=lf
+*.css linguist-vendored
+*.md linguist-venodored
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.ico   binary
+*.icns  binary
+*.exe   binary
+*.woff  binary
+*.woff2 binary
+*.otf   binary
+*.ttf   binary
+*.eot   binary
