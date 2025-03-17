@@ -72,10 +72,10 @@ On_IPurple='\033[0;105m'  # Purple
 On_ICyan='\033[0;106m'    # Cyan
 On_IWhite='\033[0;107m'   # White
 
+
+# Vesktop setup
 vesktop_theme_dir=~/.config/vesktop/themes/
 vesktop_theme_name=ClearVision_v6.theme.css
-
-
 if [ -d "$vesktop_theme_dir" ]; then
     echo -e "Do you wish to install the "$vesktop_theme_name" theme for "$BIPurple"Vesktop"$Color_Off"?"
     select input in "Yes" "No"; do
@@ -90,8 +90,29 @@ if [ -d "$vesktop_theme_dir" ]; then
         esac
     done
 else
-    echo -e ""$BIRed"It seems like Vesktop is not installed"
+    echo -e ""$BIRed"It seems like "Vesktop" is not installed"
     echo -e ""$Red"Install it with 'yay -S vesktop'"$Color_Off""
+fi
+
+# .bashrc setup (neofetch)
+neofetch_dir=~/.config/neofetch/
+neofetch_config_name=config.conf
+if [ -d "$neofetch_dir" ]; then
+    echo -e "Do you want to bocchify your terminal?"
+    select input in "Yes" "No"; do
+        case $input in
+            Yes ) rm -rf ""$neofetch_dir"/"$neofetch_config_name""
+                    echo -e "Removing old '"$BICyan""$neofetch_config_name""$Color_Off"' file..."
+                    echo -e "Copying '"$BICyan""$neofetch_config_name""$Color_Off"' to '"$BICyan""$neofetch_dir""$Color_Off"'"
+                    cp ./bashrc/"$neofetch_config_name" "$neofetch_dir";
+                    echo -e ""$BIPurple"Terminal"$Color_Off" was successfully bocchified. >\\\<"$Color_Off""
+                    break;;
+            No )  break;;
+        esac
+    done
+else
+    echo -e ""$BIRed"It seems like "neofetch" is not installed"
+    echo -e ""$Red"Install it with 'yay -S neofetch'"$Color_Off""
 fi
 
 echo -e ""$BIGreen"Setup succesfully completed!"$Color_Off""
