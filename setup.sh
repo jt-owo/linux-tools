@@ -72,55 +72,161 @@ On_IPurple='\033[0;105m'  # Purple
 On_ICyan='\033[0;106m'    # Cyan
 On_IWhite='\033[0;107m'   # White
 
+function select_options {
+
+    # little helpers for terminal print control and key input
+    ESC=$( printf "\033")
+    cursor_blink_on()   { printf "$ESC[?25h"; }
+    cursor_blink_off()  { printf "$ESC[?25l"; }
+    cursor_to()         { printf "$ESC[$1;${2:-1}H"; }
+    print_inactive()    { printf "$2   $1 "; }
+    print_active()      { printf "$2  $ESC[7m $1 $ESC[27m"; }
+    get_cursor_row()    { IFS=';' read -sdR -p $'\E[6n' ROW COL; echo ${ROW#*[}; }
+    key_input()         {
+      local key
+      IFS= read -rsn1 key 2>/dev/null >&2
+      if [[ $key = ""      ]]; then echo enter; fi;
+      if [[ $key = $'\x20' ]]; then echo space; fi;
+      if [[ $key = $'\x1b' ]]; then
+        read -rsn2 key
+        if [[ $key = [A ]]; then echo up;    fi;
+        if [[ $key = [B ]]; then echo down;  fi;
+      fi 
+    }
+    toggle_option()    {
+      local arr_name=$1
+      eval "local arr=(\"\${${arr_name}[@]}\")"
+      local option=$2
+      if [[ ${arr[option]} == true ]]; then
+        arr[option]=
+      else
+        arr[option]=true
+      fi
+      eval $arr_name='("${arr[@]}")'
+    }
+
+    local retval=$1
+    local options
+    local defaults
+
+    IFS=';' read -r -a options <<< "$2"
+    if [[ -z $3 ]]; then
+      defaults=()
+    else
+      IFS=';' read -r -a defaults <<< "$3"
+    fi
+    local selected=()
+
+    for ((i=0; i<${#options[@]}; i++)); do
+      selected+=("${defaults[i]:-false}")
+      printf "\n"
+    done
+
+    # determine current screen position for overwriting the options
+    local lastrow=`get_cursor_row`
+    local startrow=$(($lastrow - ${#options[@]}))
+
+    # ensure cursor and input echoing back on upon a ctrl+c during read -s
+    trap "cursor_blink_on; stty echo; printf '\n'; exit" 2
+    cursor_blink_off
+
+    local active=0
+    while true; do
+        # print options by overwriting the last lines
+        local idx=0
+        for option in "${options[@]}"; do
+            local prefix="[ ]"
+            if [[ ${selected[idx]} == true ]]; then
+              prefix="[x]"
+            fi
+
+            cursor_to $(($startrow + $idx))
+            if [ $idx -eq $active ]; then
+                print_active "$option" "$prefix"
+            else
+                print_inactive "$option" "$prefix"
+            fi
+            ((idx++))
+        done
+
+        # user key control
+        case `key_input` in
+            space)  toggle_option selected $active;;
+            enter)  break;;
+            up)     ((active--));
+                    if [ $active -lt 0 ]; then active=$((${#options[@]} - 1)); fi;;
+            down)   ((active++));
+                    if [ $active -ge ${#options[@]} ]; then active=0; fi;;
+        esac
+    done
+
+    # cursor position back to normal
+    cursor_to $lastrow
+    printf "\n"
+    cursor_blink_on
+
+    eval $retval='("${selected[@]}")'
+}
+
+OPTIONS_VALUES=("vesktop" "bashrc")
+OPTIONS_LABELS=("Vesktop" "Terminal")
+
+for i in "${!OPTIONS_VALUES[@]}"; do
+	OPTIONS_STRING+="${OPTIONS_VALUES[$i]} (${OPTIONS_LABELS[$i]});"
+done
+
+echo -e ""$White"Linux setup script by "$BIPurple"jt-owo"$Color_Off""
+echo "Version: 0.1"
+echo "Navigate with the arrow keys, press the spacebar to select/delect and press enter to proceed."
+
+select_options SELECTED "$OPTIONS_STRING"
+
+for i in "${!SELECTED[@]}"; do
+	if [ "${SELECTED[$i]}" == "true" ]; then
+		CHECKED+=("${OPTIONS_VALUES[$i]}")
+	fi
+done
+
 # Universal vars
 success=false
 
 # Vesktop setup
-vesktop_theme_dir=~/.config/vesktop/themes/
-vesktop_theme_name=ClearVision_v6.theme.css
-if [ -d "$vesktop_theme_dir" ]; then
-    echo -e "Do you want to install the "$vesktop_theme_name" theme for "$BIPurple"Vesktop"$Color_Off"?"
-    select input in "Yes" "No"; do
-        case $input in
-            Yes ) rm -rf ""$vesktop_theme_dir"/"$vesktop_theme_name""
-                    echo -e "Removing old '"$BICyan""$vesktop_theme_name""$Color_Off"' file..."
-                    echo -e "Copying '"$BICyan""$vesktop_theme_name""$Color_Off"' to '"$BICyan""$vesktop_theme_dir""$Color_Off"'"
-                    cp ./themes/"$vesktop_theme_name" "$vesktop_theme_dir";
-                    echo -e ""$BIPurple"Vesktop Theme"$Color_Off" "$BIGreen"was successfully installed :3"$Color_Off""
-                    success=true
-                    break;;
-            No )  break;;
-        esac
-    done
-else
-    echo -e ""$BIRed"It seems like "Vesktop" is not installed"$Color_Off""
-    echo -e ""$Red"Install it with 'yay -S vesktop'"$Color_Off""
+if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'vesktop'; then
+    vesktop_theme_dir=~/.config/vesktop/themes/
+    vesktop_theme_name=ClearVision_v6.theme.css
+    if [ -d "$vesktop_theme_dir" ]; then
+        rm -rf ""$vesktop_theme_dir"/"$vesktop_theme_name""
+        echo -e "Removing old '"$BICyan""$vesktop_theme_name""$Color_Off"' file..."
+        echo -e "Copying '"$BICyan""$vesktop_theme_name""$Color_Off"' to '"$BICyan""$vesktop_theme_dir""$Color_Off"'"
+        cp ./themes/"$vesktop_theme_name" "$vesktop_theme_dir";
+        echo -e ""$BIPurple"Vesktop Theme"$Color_Off" "$BIGreen"was successfully installed :3"$Color_Off""
+        success=true
+    else
+        echo -e ""$BIRed"It seems like "Vesktop" is not installed"$Color_Off""
+        echo -e ""$Red"Install it with 'yay -S vesktop'"$Color_Off""
+    fi
 fi
 
-# .bashrc setup (neofetch)
-neofetch_dir=~/.config/neofetch/
-neofetch_config_name=config.conf
-if [ -d "$neofetch_dir" ]; then
-    echo -e "Do you want to bocchify your terminal?"
-    select input in "Yes" "No"; do
-        case $input in
-            Yes ) rm -rf ""$neofetch_dir"/"$neofetch_config_name""
-                    echo -e "Removing old '"$BICyan""$neofetch_config_name""$Color_Off"' file..."
-                    echo -e "Copying '"$BICyan""$neofetch_config_name""$Color_Off"' to '"$BICyan""$neofetch_dir""$Color_Off"'"
-                    cp ./bashrc/"$neofetch_config_name" "$neofetch_dir";
-                    echo -e ""$BIPurple"Terminal"$Color_Off" "$BIGreen"was successfully bocchified >\\\\\\<"$Color_Off""
-                    success=true
-                    break;;
-            No )  break;;
-        esac
-    done
-else
-    echo -e ""$BIRed"It seems like "neofetch" is not installed"
-    echo -e ""$Red"Install it with 'yay -S neofetch'"$Color_Off""
+if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'bashrc'; then
+    # .bashrc setup (neofetch)
+    neofetch_dir=~/.config/neofetch/
+    neofetch_config_name=config.conf
+    if [ -d "$neofetch_dir" ]; then
+        rm -rf ""$neofetch_dir"/"$neofetch_config_name""
+        echo -e "Removing old '"$BICyan""$neofetch_config_name""$Color_Off"' file..."
+        echo -e "Copying '"$BICyan""$neofetch_config_name""$Color_Off"' to '"$BICyan""$neofetch_dir""$Color_Off"'"
+        cp ./bashrc/"$neofetch_config_name" "$neofetch_dir";
+        echo -e ""$BIPurple"Terminal"$Color_Off" "$BIGreen"was successfully bocchified >\\\\\\<"$Color_Off""
+        success=true
+    else
+        echo -e ""$BIRed"It seems like "neofetch" is not installed"
+        echo -e ""$Red"Install it with 'yay -S neofetch'"$Color_Off""
+    fi
 fi
 
 if [ "$success" = true ] ; then
     echo -e ""$BIGreen"Setup succesfully completed!"$Color_Off""
+    echo -e ""$BIGreen"Thanks for using this script :3"$Color_Off""
 else
     echo -e ""$BIRed"Setup was cancelled."$Color_Off""
 fi
