@@ -79,7 +79,7 @@ success=false
 vesktop_theme_dir=~/.config/vesktop/themes/
 vesktop_theme_name=ClearVision_v6.theme.css
 if [ -d "$vesktop_theme_dir" ]; then
-    echo -e "Do you wish to install the "$vesktop_theme_name" theme for "$BIPurple"Vesktop"$Color_Off"?"
+    echo -e "Do you want to install the "$vesktop_theme_name" theme for "$BIPurple"Vesktop"$Color_Off"?"
     select input in "Yes" "No"; do
         case $input in
             Yes ) rm -rf ""$vesktop_theme_dir"/"$vesktop_theme_name""
@@ -93,7 +93,7 @@ if [ -d "$vesktop_theme_dir" ]; then
         esac
     done
 else
-    echo -e ""$BIRed"It seems like "Vesktop" is not installed"
+    echo -e ""$BIRed"It seems like "Vesktop" is not installed"$Color_Off""
     echo -e ""$Red"Install it with 'yay -S vesktop'"$Color_Off""
 fi
 
