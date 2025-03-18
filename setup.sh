@@ -168,7 +168,7 @@ function select_options {
     eval $retval='("${selected[@]}")'
 }
 
-OPTIONS_VALUES=("vesktop" "bashrc")
+OPTIONS_VALUES=("vesktop" "neofetch")
 OPTIONS_LABELS=("Vesktop" "Terminal")
 
 for i in "${!OPTIONS_VALUES[@]}"; do
@@ -176,7 +176,7 @@ for i in "${!OPTIONS_VALUES[@]}"; do
 done
 
 echo -e ""$White"Linux setup script by "$BIPurple"jt-owo"$Color_Off""
-echo "Version: 0.1"
+echo ""$BIWhite"Version: 0.1"$Color_Off""
 echo "Navigate with the arrow keys, press the spacebar to select/delect and press enter to proceed."
 
 select_options SELECTED "$OPTIONS_STRING"
@@ -207,7 +207,7 @@ if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'vesktop'; then
     fi
 fi
 
-if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'bashrc'; then
+if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'neofetch'; then
     # .bashrc setup (neofetch)
     neofetch_dir=~/.config/neofetch/
     neofetch_config_name=config.conf
@@ -216,7 +216,7 @@ if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'bashrc'; then
         echo -e "Removing old '"$BICyan""$neofetch_config_name""$Color_Off"' file..."
         echo -e "Copying '"$BICyan""$neofetch_config_name""$Color_Off"' to '"$BICyan""$neofetch_dir""$Color_Off"'"
         cp ./bashrc/"$neofetch_config_name" "$neofetch_dir";
-        echo -e ""$BIPurple"Terminal"$Color_Off" "$BIGreen"was successfully bocchified >\\\\\\<"$Color_Off""
+        echo -e ""$BIPurple"Terminal"$Color_Off" "$BIGreen"was successfully bocchified >w<"$Color_Off""
         success=true
     else
         echo -e ""$BIRed"It seems like "neofetch" is not installed"
