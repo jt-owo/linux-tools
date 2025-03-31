@@ -193,7 +193,7 @@ success=false
 # Vesktop setup
 if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'vesktop'; then
     vesktop_theme_dir=~/.config/vesktop/themes/
-    vesktop_theme_name=ClearVision_v6.theme.css
+    vesktop_theme_name=ClearVision_v7.theme.css
     if [ -d "$vesktop_theme_dir" ]; then
         rm -rf ""$vesktop_theme_dir"/"$vesktop_theme_name""
         echo -e "Removing old '"$BICyan""$vesktop_theme_name""$Color_Off"' file..."
