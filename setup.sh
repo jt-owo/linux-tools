@@ -169,14 +169,14 @@ function select_options {
 }
 
 OPTIONS_VALUES=("vesktop" "neofetch")
-OPTIONS_LABELS=("Vesktop" "Terminal")
+OPTIONS_LABELS=("Vesktop" "neofetch")
 
 for i in "${!OPTIONS_VALUES[@]}"; do
 	OPTIONS_STRING+="${OPTIONS_VALUES[$i]} (${OPTIONS_LABELS[$i]});"
 done
 
-echo -e ""$White"Linux setup script by "$BIPurple"jt-owo"$Color_Off""
-echo ""$BIWhite"Version: 0.1"$Color_Off""
+echo -e "${White}Linux setup script by ${BIPurple}jt-owo${Color_Off}"
+echo "Version: 0.1"
 echo "Navigate with the arrow keys, press the spacebar to select/delect and press enter to proceed."
 
 select_options SELECTED "$OPTIONS_STRING"
@@ -194,39 +194,39 @@ success=false
 if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'vesktop'; then
     vesktop_theme_dir=~/.config/vesktop/themes/
     vesktop_theme_name=ClearVision_v7.theme.css
-    if [ -d "$vesktop_theme_dir" ]; then
+    if [ -d ${vesktop_theme_dir} ]; then
         rm -rf ""$vesktop_theme_dir"/"$vesktop_theme_name""
         echo -e "Removing old '"$BICyan""$vesktop_theme_name""$Color_Off"' file..."
-        echo -e "Copying '"$BICyan""$vesktop_theme_name""$Color_Off"' to '"$BICyan""$vesktop_theme_dir""$Color_Off"'"
+        echo -e "Copying '${BICyan}${vesktop_theme_name}${Color_Off}' to '${BICyan}${vesktop_theme_dir}${Color_Off}'"
         cp ./themes/"$vesktop_theme_name" "$vesktop_theme_dir";
-        echo -e ""$BIPurple"Vesktop Theme"$Color_Off" "$BIGreen"was successfully installed :3"$Color_Off""
+        echo -e "${BIPurple}Vesktop Theme${Color_Off} ${BIGreen}was successfully installed :3${Color_Off}"
         success=true
     else
-        echo -e ""$BIRed"It seems like "Vesktop" is not installed"$Color_Off""
-        echo -e ""$Red"Install it with 'yay -S vesktop'"$Color_Off""
+        echo -e "${BIRed}It seems like "Vesktop" is not installed${Color_Off}"
+        echo -e "${Red}Install it with 'yay -S vesktop'${Color_Off}"
     fi
 fi
 
 if printf '%s\0' "${CHECKED[@]}" | grep -Fxqz -- 'neofetch'; then
-    # .bashrc setup (neofetch)
+    # neofetch setup
     neofetch_dir=~/.config/neofetch/
     neofetch_config_name=config.conf
-    if [ -d "$neofetch_dir" ]; then
-        rm -rf ""$neofetch_dir"/"$neofetch_config_name""
-        echo -e "Removing old '"$BICyan""$neofetch_config_name""$Color_Off"' file..."
-        echo -e "Copying '"$BICyan""$neofetch_config_name""$Color_Off"' to '"$BICyan""$neofetch_dir""$Color_Off"'"
-        cp ./bashrc/"$neofetch_config_name" "$neofetch_dir";
-        echo -e ""$BIPurple"Terminal"$Color_Off" "$BIGreen"was successfully bocchified >w<"$Color_Off""
+    if [ -d ${neofetch_dir} ]; then
+        rm -rf "${neofetch_dir}/${neofetch_config_name}"
+        echo -e "Removing old '${BICyan}${neofetch_config_name}${Color_Off}' file..."
+        echo -e "Copying '${BICyan}${neofetch_config_name}${Color_Off}' to '${BICyan}${neofetch_dir}${Color_Off}'"
+        cp ./bashrc/${neofetch_config_name} ${neofetch_dir};
+        echo -e "${BIPurple}Terminal${Color_Off} ${BIGreen}was successfully bocchified >w<${Color_Off}"
         success=true
     else
-        echo -e ""$BIRed"It seems like "neofetch" is not installed"
-        echo -e ""$Red"Install it with 'yay -S neofetch'"$Color_Off""
+        echo -e "${BIRed}It seems like "neofetch" is not installed"
+        echo -e "${Red}Install it with 'yay -S neofetch'${Color_Off}"
     fi
 fi
 
 if [ "$success" = true ] ; then
-    echo -e ""$BIGreen"Setup succesfully completed!"$Color_Off""
-    echo -e ""$BIGreen"Thanks for using this script :3"$Color_Off""
+    echo -e "${BIGreen}Setup succesfully completed!${Color_Off}"
+    echo -e "${BIGreen}Thanks for using this script :3${Color_Off}"
 else
-    echo -e ""$BIRed"Setup was cancelled."$Color_Off""
+    echo -e "${BIRed}Setup was cancelled.${Color_Off}"
 fi
